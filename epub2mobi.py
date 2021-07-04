@@ -54,7 +54,6 @@ if source.is_file():
     target = source.with_suffix('.mobi')
 elif source.is_dir():
     target = Path(str(Path(argv[0])) + '-build')
-    target.mkdir(exist_ok=True)
     # if target.exists():
     #     raise RuntimeError(f'TargetExistsError: Target "{target}" already exist.')
 else:
@@ -66,6 +65,9 @@ if len(argv) > 1 and not same_dir:
     target = Path(argv[1])
     if target.exists():
         raise RuntimeError(f'TargetExistsError: Target "{target}" already exist.')
+
+if same_dir:
+    target = source
 
 
 def run_convert(input_file: Path, output_file: Path) -> None:
@@ -104,6 +106,7 @@ def recurse_folder(path: Path) -> List[Path]:
 if source.is_file():
     print(f'Founded: {source}')
     print(f'Building {target}...')
+    target.mkdir(parents=True, exist_ok=True)
     run_convert(source, target)
     print('Finished.')
     exit(0)
